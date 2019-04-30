@@ -2,14 +2,16 @@ import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+//import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
@@ -20,10 +22,11 @@ public class Register {
 
 	public JFrame frmRegisteration;
 	private JTextField textField;
-	private JTextField textField_1;
+	private JPasswordField textField_1;
 	private JTextField textField_2;
-	private JTextField textField_3;
 	private JTextField textField_4;
+	@SuppressWarnings("rawtypes")
+	public JComboBox GenderList ;
 	Connection conn = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -46,6 +49,7 @@ public class Register {
 	/**
 	 * Create the application.
 	 */
+	@SuppressWarnings("static-access")
 	public Register() {
 		initialize();
 		conn = new DBHandler().getConn();
@@ -54,6 +58,7 @@ public class Register {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void initialize() {
 		frmRegisteration = new JFrame();
 		frmRegisteration.getContentPane().setBackground(Color.DARK_GRAY);
@@ -65,21 +70,38 @@ public class Register {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
+				@SuppressWarnings("unused")
+				String Gender=(GenderList.getSelectedIndex()==0)?"Male":"Female";
+				@SuppressWarnings("deprecation")
+				String PasswordText=(String)textField_1.getText();
 				
-					
-				if(textField.getText().equals("") ||textField_1.getText().equals("")||textField_2.getText().equals("") ||textField_3.getText().equals("") ||textField_4.getText().equals(""))
+				 boolean IsNumeric = true;
+				try {
+		          @SuppressWarnings("unused")
+				Double num = Double.parseDouble(textField_4.getText());
+		        } catch (NumberFormatException e) {
+		        	IsNumeric = false;
+		        }
+				
+				if(textField.getText().equals("") ||PasswordText.equals("")||textField_2.getText().equals("")  ||textField_4.getText().equals(""))
 				{
-					JOptionPane.showMessageDialog(null,"Please Fill all Fields to complete Registeration");
+				JOptionPane.showMessageDialog(null,"Please Fill all Fields to complete Registeration");
 						
 				}
+				else if(!IsNumeric)
+				{
+					JOptionPane.showMessageDialog(null,"Please Fill the Age Correctly.");
+				}
 				else {
-					try {
-						String query = "insert into user(username,password,Nickname,Gender,Age) values(\""+textField.getText()+
-								"\",\""+textField_1.getText()+"\",\""+textField_2.getText()+"\",\""+textField_3.getText()+"\",33)";
+		//			try {// edit her
+
+					//	System.out.println(Gender+PasswordText);//for debugging
+				//		String query = "insert into user(username,password,Nickname,Gender,Age) values(\""+textField.getText()+
+			//					"\",\""+PasswordText+"\",\""+textField_2.getText()+"\",\""+Gender+"\",33)";
 					//System.out.println(query); //for debugging
-							ps = conn.prepareStatement(query);
-							int done =ps.executeUpdate();
-							
+						//	ps = conn.prepareStatement(query);
+					//		int done =ps.executeUpdate();
+							int done=1; // added for debugging 
 							if(done==1)
 							{
 								 JOptionPane.showMessageDialog(null, "Registered Succesfully");
@@ -90,15 +112,24 @@ public class Register {
 							}else{
 				                JOptionPane.showMessageDialog(null, "Registeration Failed");
 				            }
-						} catch (SQLException e) {
+					
+	//					} catch (SQLException e) {
 							// TODO Auto-generated catch block
 					//		e.printStackTrace();
 						}
 				}
 						
-			}
+	//		}
 		});
+				
+		String[] Gender = { "Male", "Female" };
+
 		
+		this.GenderList = new JComboBox(Gender);
+		
+
+		
+		GenderList.setForeground(Color.BLUE);
 		JLabel lblNewLabel = new JLabel("User Name");
 		lblNewLabel.setForeground(Color.YELLOW);
 		
@@ -117,14 +148,15 @@ public class Register {
 		textField = new JTextField();
 		textField.setColumns(10);
 		
-		textField_1 = new JTextField();
+		textField_1 = new JPasswordField();
 		textField_1.setColumns(10);
-		
+
 		textField_2 = new JTextField();
 		textField_2.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
+//		textField_3 = new JTextField();
+		
+	//	textField_3.setColumns(10);
 		
 		textField_4 = new JTextField();
 		textField_4.setColumns(10);
@@ -143,13 +175,14 @@ public class Register {
 								.addComponent(lblNewLabel)
 								.addComponent(lblPassword)
 								.addComponent(lblNickname)
-								.addComponent(lblGender))
+								.addComponent(lblGender)
+								)
 							.addPreferredGap(ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
 							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 								.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(GenderList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addContainerGap(178, Short.MAX_VALUE))
 		);
@@ -171,7 +204,8 @@ public class Register {
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblGender)
-						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(GenderList)
+						.addComponent(GenderList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblAge)

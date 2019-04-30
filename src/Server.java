@@ -11,6 +11,7 @@ public class Server {
 	public Server() throws IOException{
 		// TODO Auto-generated constructor stub
 		try {
+			@SuppressWarnings("resource")
 			ServerSocket ss= new ServerSocket(6666);
 			Clientsockets = new Vector<Socket>();
 
@@ -30,6 +31,7 @@ public class Server {
 	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
+		@SuppressWarnings("unused")
 		Server server= new Server();
 		
 		
@@ -55,17 +57,17 @@ public class Server {
 			
 			try {
 				while(true) {
-					String msgin = dis.readUTF();
-					//System.out.println(msgin);
+					String msgin = dis.readUTF();// read the message 
+					System.out.println(msgin);// print the incoming message
 					for(int i=0; i<Clientsockets.size();i++)
 					{
-						Socket tempsock = Clientsockets.elementAt(i);
+						Socket tempsock = Clientsockets.elementAt(i); // bring the socket for all in the chat room
 						if(clientsocket.equals(tempsock))
 						{
-							continue;
+							continue; // skip if its the socket of the sender ( Don't send it back to him)
 						}
 						try {
-						DataOutputStream dout = new DataOutputStream(tempsock.getOutputStream());
+						DataOutputStream dout = new DataOutputStream(tempsock.getOutputStream());// send the msg
 						dout.writeUTF(msgin);
 						dout.flush();
 						}catch(SocketException e) {

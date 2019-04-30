@@ -23,6 +23,10 @@ import java.awt.Font;
 import java.awt.Color;
 public class Client extends JFrame implements WindowListener {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static String client_username="no_db_username";
 	public static String client_Nickname="no_db_nickname";
 	private Connection conn;
@@ -51,13 +55,14 @@ public class Client extends JFrame implements WindowListener {
 	/**
 	 * Create the application.
 	 */
+	@SuppressWarnings("static-access")
 	public Client(String username) {
 		initialize();
 	this.client_username=username;
 		
 		try {
-			conn=new DBHandler().getConn();
-			this.client_Nickname=getclientNickname();
+	//		conn=new DBHandler().getConn();
+	//		this.client_Nickname=getclientNickname();
 			socket = new Socket("localhost", 6666);
 			 dos = new DataOutputStream(socket.getOutputStream());
 			 new Thread(new MessageUpdater(socket)).start();
@@ -76,8 +81,6 @@ public class Client extends JFrame implements WindowListener {
 	{
 		private Socket connection_socket;
 		private DataInputStream textupdater;
-		private String newmsg="def";
-		
 		public MessageUpdater(Socket sock) {
 			//System.out.println("new msgupdater @"+sock.getPort()); for debugging
 		this.connection_socket=sock;
