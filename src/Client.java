@@ -20,6 +20,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.Color;
 public class Client extends JFrame implements WindowListener {
 	
@@ -102,6 +103,7 @@ public class Client extends JFrame implements WindowListener {
 			{
 				try {
 					textArea_1.append("\n"+textupdater.readUTF());
+					Toolkit.getDefaultToolkit().beep();//abeeb sound :)
 					//System.out.println(newmsg); for debugging
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
